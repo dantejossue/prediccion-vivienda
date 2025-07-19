@@ -1,0 +1,107 @@
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('../img/bengalore.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .overlay {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 25px;
+      padding: 2.5rem;
+      width: 400px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      transition: transform 0.3s ease;
+      color: white;
+      position: relative;
+    }
+    h2 {
+      margin-bottom: 25px;
+      text-align: center;
+      color: #ffffff;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      margin-bottom: 18px;
+      padding: 10px 12px;
+      position: relative;
+    }
+    .input-group i {
+      margin-right: 10px;
+      color: #333;
+      font-size: 1.2rem;
+      min-width: 24px;
+    }
+    .input-group input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      outline: none;
+    }
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 36px;
+      right: 10px;
+      background: white;
+      color: black;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .suggestions div {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .suggestions div:hover {
+      background: #eee;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0057ff;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #003fcc;
+    }
+    .resultado {
+      margin-top: 25px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 1rem;
+      border-radius: 16px;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    }

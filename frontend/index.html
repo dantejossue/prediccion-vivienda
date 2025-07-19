@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estimador de Precio de Propiedad</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Select2 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="overlay">
+      <h2>Estimador de Precio de Propiedad</h2>
+      <form id="formulario" autocomplete="off">
+        <label for="pies">Área en pies cuadrados</label>
+        <div class="input-group">
+          <i class="fas fa-ruler-combined"></i>
+          <input type="number" id="pies" required placeholder="Ej: 1500" />
+        </div>
+        <small
+          id="conversionMetros"
+          style="margin-left: 10px; color: #888; font-style: italic"
+        ></small>
+
+        <label for="habitaciones">Número de habitaciones</label>
+        <div class="input-group">
+          <i class="fas fa-bed"></i>
+          <input type="number" id="habitaciones" required />
+        </div>
+
+        <label for="banos">Número de baños</label>
+        <div class="input-group">
+          <i class="fas fa-bath"></i>
+          <input type="number" id="banos" required />
+        </div>
+
+        <label for="localidad">Localidad</label>
+        <div class="input-group">
+          <i class="fas fa-map-marker-alt"></i>
+          <select id="localidad" style="width: 100%" required></select>
+        </div>
+
+        <button type="submit">Estimar Precio</button>
+      </form>
+
+      <div class="resultado" id="resultado" style="display: none"></div>
+    </div>
+
+    <
+    <script>
+      document
+        .getElementById("formulario")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Leer valor en pies cuadrados desde el input
+          const pies = parseFloat(document.getElementById("pies").value);
+          const habitaciones = parseInt(
+            document.getElementById("habitaciones").value
+          );
+          const banos = parseInt(document.getElementById("banos").value);
+          const localidad = document.getElementById("localidad").value.trim();
+
+          // Enviar pies cuadrados al backend (modelo espera eso)
+          fetch("http://localhost:5000/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              metros: pies,
+              habitaciones,
+              banos,
+              localidad,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              const precioLakhs = data.precio_estimado;
+              const precioSoles = precioLakhs * 100000 * 0.045;
+              const metrosConvertidos = pies / 10.7639;
+
+              const resultado = `
+          <h3>Resultado de la Estimación</h3>
+          <p><strong>Pies cuadrados:</strong> ${pies}</p>
+          <p><strong>≈ Metros cuadrados:</strong> ${metrosConvertidos.toFixed(
+            2
+          )}</p>
+          <p><strong>Habitaciones:</strong> ${habitaciones}</p>
+          <p><strong>Baños:</strong> ${banos}</p>
+          <p><strong>Localidad:</strong> ${localidad}</p>
+          <p class="precio"><strong>Precio estimado:</strong> ₹${precioLakhs.toLocaleString()} lakhs</p>
+          <p><em>(Aproximadamente S/. ${precioSoles
+            .toFixed(2)
+            .toLocaleString()} soles)</em></p>
+        `;
+
+              const divResultado = document.getElementById("resultado");
+              divResultado.innerHTML = resultado;
+              divResultado.style.display = "block";
+            });
+        });
+    </script>
+
+    <!-- jQuery + Select2 JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="assets/js/localidades.js"></script>
+    <script>
+      // Cargar localidades al select
+      $(document).ready(function () {
+        $("#localidad").select2({
+          data: listaLocalidades.map((loc) => ({ id: loc, text: loc })),
+          placeholder: "Selecciona una localidad",
+        });
+      });
+    </script>
+
+    <script>
+      const piesInput = document.getElementById("pies");
+      const metrosRef = document.getElementById("conversionMetros");
+
+      piesInput.addEventListener("input", function () {
+        const pies = parseFloat(piesInput.value);
+        if (!isNaN(pies)) {
+          const metros = pies / 10.7639;
+          metrosRef.innerText = `≈ ${metros.toFixed(2)} metros cuadrados`;
+        } else {
+          metrosRef.innerText = "";
+        }
+      });
+    </script>
+  </body>
+</html>
